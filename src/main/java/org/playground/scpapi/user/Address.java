@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Getter
 @Setter
 @Entity(name = "addresses")
@@ -11,7 +13,7 @@ public class Address {
     @Id
     @Column(name = "uuid", nullable = false, length = 16)
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String uuid;
+    private UUID uuid;
 
     @Column(name = "building_number")
     private Integer buildingNumber;

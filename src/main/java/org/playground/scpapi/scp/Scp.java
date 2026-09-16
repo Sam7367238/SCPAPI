@@ -7,6 +7,7 @@ import org.playground.scpapi.media.Media;
 import org.playground.scpapi.user.User;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -15,7 +16,7 @@ public class Scp {
     @Id
     @Column(name = "uuid")
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String uuid;
+    private UUID uuid;
 
     @Column(name = "clearance_level")
     private Byte clearanceLevel;

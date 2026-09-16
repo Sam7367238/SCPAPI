@@ -6,6 +6,8 @@ import lombok.Setter;
 import org.playground.scpapi.media.Media;
 import org.playground.scpapi.user.User;
 
+import java.util.UUID;
+
 @Getter
 @Setter
 @Entity(name = "departments")
@@ -13,7 +15,7 @@ public class Department {
     @Id
     @Column(name = "uuid")
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String uuid;
+    private UUID uuid;
 
     @Column(name = "name")
     private String name;

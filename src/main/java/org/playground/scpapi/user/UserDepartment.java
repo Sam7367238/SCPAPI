@@ -1,11 +1,11 @@
-package org.playground.scpapi.department;
+package org.playground.scpapi.user;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.playground.scpapi.user.User;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -14,7 +14,7 @@ public class UserDepartment {
     @Id
     @Column(name = "uuid")
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String uuid;
+    private UUID uuid;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
