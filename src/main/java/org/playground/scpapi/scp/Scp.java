@@ -1,17 +1,11 @@
 package org.playground.scpapi.scp;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 import org.playground.scpapi.media.Media;
 import org.playground.scpapi.user.User;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Getter
