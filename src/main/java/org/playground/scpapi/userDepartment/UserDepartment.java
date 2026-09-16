@@ -1,9 +1,10 @@
-package org.playground.scpapi.user;
+package org.playground.scpapi.userDepartment;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.playground.scpapi.department.Department;
+import org.playground.scpapi.user.User;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

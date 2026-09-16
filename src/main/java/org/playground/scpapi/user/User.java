@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.playground.scpapi.department.Department;
+import org.playground.scpapi.userDepartment.UserDepartment;
 
 import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
