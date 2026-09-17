@@ -9,6 +9,9 @@ public interface UserMapper {
     @Mapping(target = "departments", ignore = true)
     @Mapping(target = "addresses", ignore = true)
     @Mapping(target = "userDepartments", ignore = true)
+    @Mapping(target = "uuid", ignore = true)
+    @Mapping(target = "created", expression = "java(LocalDateTime.now())")
+    @Mapping(target = "profile", ignore = true)
     User toEntity(RegisterUserRequest request);
 
     UserDto toDto(User user);

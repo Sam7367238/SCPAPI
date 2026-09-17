@@ -48,9 +48,10 @@ public class User {
     @ToString.Exclude
     private Set<Department> departments = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToOne
+    @JoinColumn(name = "profile_id")
     @ToString.Exclude
-    private Set<Profile> profiles = new LinkedHashSet<>();
+    private Profile profile;
 
     @OneToMany(mappedBy = "user")
     @ToString.Exclude

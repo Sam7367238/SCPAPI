@@ -20,7 +20,6 @@ public class Profile {
     @JoinColumn(name = "image_id")
     private Media media;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    @OneToOne(mappedBy = "profile")
     private User user;
 }
