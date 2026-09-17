@@ -10,4 +10,6 @@ public interface UserMapper {
     @Mapping(target = "addresses", ignore = true)
     @Mapping(target = "userDepartments", ignore = true)
     User toEntity(RegisterUserRequest request);
+
+    UserDto toDto(User user);
 }

@@ -3,6 +3,7 @@ package org.playground.scpapi.user;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.playground.scpapi.department.Department;
 import org.playground.scpapi.userDepartment.UserDepartment;
 
@@ -14,6 +15,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity(name = "users")
+@ToString
 public class User {
     @Id
     @Column(name = "uuid")
@@ -39,14 +41,18 @@ public class User {
     private LocalDateTime created;
 
     @OneToMany(mappedBy = "user")
+    @ToString.Exclude
     private Set<Address> addresses = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "user")
+    @ToString.Exclude
     private Set<Department> departments = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "user")
+    @ToString.Exclude
     private Set<Profile> profiles = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "user")
+    @ToString.Exclude
     private Set<UserDepartment> userDepartments = new LinkedHashSet<>();
 }

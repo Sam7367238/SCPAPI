@@ -1,23 +1,25 @@
 package org.playground.scpapi.common;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public List<ErrorDto> handleValidationException(MethodArgumentNotValidException exception) {
-        var errorDtos = new ArrayList<ErrorDto>();
+    public Map<String, String> handleValidationException(MethodArgumentNotValidException exception) {
+        var errors = new HashMap<String, String>();
 
-        exception.getBindingResult().getFieldErrors().forEach(e -> errorDtos.add(new ErrorDto(e.getDefaultMessage())));
+        exception.getBindingResult().getFieldErrors().forEach(e -> errors.put(e.getField(), e.getDefaultMessage()));
 
-        return errorDtos;
+        return errors;
     }
 }
