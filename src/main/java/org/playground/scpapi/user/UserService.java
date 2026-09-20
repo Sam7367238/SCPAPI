@@ -1,6 +1,8 @@
 package org.playground.scpapi.user;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,5 +25,17 @@ public class UserService {
         userRepository.save(user);
 
         return userMapper.toDto(user);
+    }
+
+    public void enableUserPassword(String email, String password) {
+        var user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+
+        if (user.getPassword() != null) {
+            throw new AccessDeniedException("You are not authorized to perform this operation");
+        }
+
+        user.setPassword(password);
+
+        userRepository.save(user);
     }
 }

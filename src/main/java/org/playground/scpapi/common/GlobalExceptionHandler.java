@@ -1,5 +1,6 @@
 package org.playground.scpapi.common;
 
+import org.playground.scpapi.user.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -19,5 +20,11 @@ public class GlobalExceptionHandler {
         exception.getBindingResult().getFieldErrors().forEach(e -> errors.put(e.getField(), e.getDefaultMessage()));
 
         return errors;
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorDto handleUserNotFoundException(UserNotFoundException exception) {
+        return new ErrorDto(exception.getMessage());
     }
 }
