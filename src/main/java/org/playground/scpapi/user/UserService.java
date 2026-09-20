@@ -12,6 +12,10 @@ public class UserService {
     private final ProfileRepository profileRepository;
 
     public UserDto createUser(RegisterUserRequest request) {
+        if (userRepository.findByEmail(request.email()).isPresent()) {
+            throw new DuplicateUserException();
+        }
+
         var user = userMapper.toEntity(request);
 
 //        user.setCreated(LocalDateTime.now());

@@ -1,5 +1,6 @@
 package org.playground.scpapi.common;
 
+import org.playground.scpapi.user.DuplicateUserException;
 import org.playground.scpapi.user.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -25,6 +26,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UserNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorDto handleUserNotFoundException(UserNotFoundException exception) {
+        return new ErrorDto(exception.getMessage());
+    }
+
+    @ExceptionHandler(DuplicateUserException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorDto handleDuplicateUserException(DuplicateUserException exception) {
         return new ErrorDto(exception.getMessage());
     }
 }
