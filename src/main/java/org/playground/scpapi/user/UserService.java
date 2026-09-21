@@ -1,8 +1,11 @@
 package org.playground.scpapi.user;
 
 import lombok.AllArgsConstructor;
+import org.playground.scpapi.common.EmailService;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Service
 @AllArgsConstructor
@@ -10,6 +13,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final ProfileRepository profileRepository;
+    private final EmailService emailService;
 
     public UserDto createUser(RegisterUserRequest request) {
         if (userRepository.findByEmail(request.email()).isPresent()) {
@@ -30,6 +34,7 @@ public class UserService {
         return userMapper.toDto(user);
     }
 
+    @Deprecated(since = "0.5.0", forRemoval = true)
     public void enableUserPassword(String email, String password) {
         var user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
 
@@ -40,5 +45,18 @@ public class UserService {
         user.setPassword(password);
 
         userRepository.save(user);
+    }
+
+    public void sendPasswordResetEmail(String email) {
+        var user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+
+        var restorationTokenBuilder = new RestorationToken.RestorationTokenBuilder();
+        var restorationToken = restorationTokenBuilder
+                .user(user).activated(false)
+                .purpose(RestorationTokenType.PASSWORD_RESET)
+                .expiration(LocalDateTime.now().plusMinutes(15))
+                .build();
+
+        emailService.sendEmail(email, "Password Reset", "");
     }
 }

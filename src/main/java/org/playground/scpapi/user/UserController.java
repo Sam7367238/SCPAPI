@@ -9,6 +9,8 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/users")
 @AllArgsConstructor
@@ -27,15 +29,25 @@ class UserController {
         return ResponseEntity.created(uri).body(dto);
     }
 
-    @PostMapping("/setup")
-    public ResponseEntity<Void> setupUser(@Valid @RequestBody UserSetupRequest request) {
-        userService.enableUserPassword(request.email(), request.password());
+//    @PostMapping("/setup")
+//    public ResponseEntity<Void> setupUser(@Valid @RequestBody UserSetupRequest request) {
+//        userService.enableUserPassword(request.email(), request.password());
+//
+//        return ResponseEntity.ok().build();
+//    }
 
-        return ResponseEntity.ok().build();
+    @PostMapping("/password-reset")
+    public ResponseEntity<?> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
+        userService.sendPasswordResetEmail(request.email());
     }
 
     @ExceptionHandler
     public ResponseEntity<ErrorDto> handleAccessDeniedException(AccessDeniedException exception) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorDto(exception.getMessage()));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<Map<String, String>> userNotFoundException() {
+        return ResponseEntity.ok(Map.of("message", "A verification email has been sent"));
     }
 }
