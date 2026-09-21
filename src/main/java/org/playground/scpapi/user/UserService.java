@@ -57,6 +57,7 @@ public class UserService {
                 .user(user).activated(false)
                 .purpose(RestorationTokenType.PASSWORD_RESET)
                 .expiration(LocalDateTime.now().plusMinutes(15))
+                .created(LocalDateTime.now())
                 .build();
 
         restorationTokenRepository.save(restorationToken);
