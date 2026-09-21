@@ -1,7 +1,8 @@
 package org.playground.scpapi.user;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.playground.scpapi.common.EmailService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -9,13 +10,16 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.time.LocalDateTime;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final ProfileRepository profileRepository;
     private final EmailService emailService;
     private final RestorationTokenRepository restorationTokenRepository;
+
+    @Value("${spring.restoration-tokens.minutes}")
+    private int restorationTokenMinutes;
 
     public UserDto createUser(RegisterUserRequest request) {
         if (userRepository.findByEmail(request.email()).isPresent()) {
@@ -56,7 +60,7 @@ public class UserService {
         var restorationToken = restorationTokenBuilder
                 .user(user).activated(false)
                 .purpose(RestorationTokenType.PASSWORD_RESET)
-                .expiration(LocalDateTime.now().plusMinutes(15))
+                .expiration(LocalDateTime.now().plusMinutes(restorationTokenMinutes))
                 .created(LocalDateTime.now())
                 .build();
 

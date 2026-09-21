@@ -22,3 +22,5 @@ spring:
           auth: true
           starttls:
             enable: true
+  restoration-tokens:
+    minutes: 15
