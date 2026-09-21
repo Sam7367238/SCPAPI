@@ -37,16 +37,18 @@ class UserController {
 //    }
 
     @PostMapping("/password-reset")
-    public ResponseEntity<?> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
+    public ResponseEntity<Map<String, String>> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
         userService.sendPasswordResetEmail(request.email());
+
+        return ResponseEntity.ok(Map.of("message", "A verification email has been sent"));
     }
 
-    @ExceptionHandler
+    @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ErrorDto> handleAccessDeniedException(AccessDeniedException exception) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorDto(exception.getMessage()));
     }
 
-    @ExceptionHandler
+    @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<Map<String, String>> userNotFoundException() {
         return ResponseEntity.ok(Map.of("message", "A verification email has been sent"));
     }

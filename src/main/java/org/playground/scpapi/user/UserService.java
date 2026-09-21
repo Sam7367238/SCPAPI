@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.playground.scpapi.common.EmailService;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.LocalDateTime;
 
@@ -14,6 +15,7 @@ public class UserService {
     private final UserMapper userMapper;
     private final ProfileRepository profileRepository;
     private final EmailService emailService;
+    private final RestorationTokenRepository restorationTokenRepository;
 
     public UserDto createUser(RegisterUserRequest request) {
         if (userRepository.findByEmail(request.email()).isPresent()) {
@@ -57,6 +59,10 @@ public class UserService {
                 .expiration(LocalDateTime.now().plusMinutes(15))
                 .build();
 
-        emailService.sendEmail(email, "Password Reset", "");
+        restorationTokenRepository.save(restorationToken);
+
+        var uri = UriComponentsBuilder.newInstance().path("/users/password-reset-email").queryParam("token", restorationToken.getUuid()).toUriString();
+
+        emailService.sendEmail(email, "Password Reset", uri);
     }
 }
