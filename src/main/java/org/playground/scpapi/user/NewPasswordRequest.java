@@ -5,11 +5,11 @@ import org.hibernate.validator.constraints.Length;
 
 public record NewPasswordRequest(
         @NotBlank(message = "Please fill this in")
-        @Length(min = 8, max = 255)
+        @Length(min = 8, max = 255, message = "This must be between 8 and 255 characters")
         String newPassword,
 
         @NotBlank(message = "Please fill this in")
-        @Length(min = 8, max = 255)
+        @Length(min = 8, max = 255, message = "This must be between 8 and 255 characters")
         String repeatPassword
 ) {
 }

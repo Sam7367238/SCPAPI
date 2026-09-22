@@ -69,8 +69,8 @@ public class UserService {
         restorationTokenRepository.save(restorationToken);
 
         var uri = UriComponentsBuilder.newInstance()
-                .path("/users/password-reset-email")
-                .queryParam("token", restorationToken.getUuid())
+                .path("/password-resets/{token}")
+                .buildAndExpand(restorationToken.getUuid())
                 .toUriString();
 
         emailService.sendEmail(email, "Password Reset", uri);

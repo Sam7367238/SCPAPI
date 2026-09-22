@@ -1,8 +1,8 @@
 package org.playground.scpapi.common;
 
-import org.playground.scpapi.user.DuplicateUserException;
-import org.playground.scpapi.user.UserNotFoundException;
+import org.playground.scpapi.user.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -32,6 +32,24 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DuplicateUserException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorDto handleDuplicateUserException(DuplicateUserException exception) {
+        return new ErrorDto(exception.getMessage());
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorDto handleAccessDeniedException(AccessDeniedException exception) {
+        return new ErrorDto(exception.getMessage());
+    }
+
+    @ExceptionHandler(ExpiredTokenException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorDto handleExpiredTokenException(ExpiredTokenException exception) {
+        return new ErrorDto(exception.getMessage());
+    }
+
+    @ExceptionHandler(NonMatchingPasswordsException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorDto handleNonMatchingPasswordsException(NonMatchingPasswordsException exception) {
         return new ErrorDto(exception.getMessage());
     }
 }
