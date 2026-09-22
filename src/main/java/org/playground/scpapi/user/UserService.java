@@ -58,7 +58,8 @@ public class UserService {
 
         var restorationTokenBuilder = new RestorationToken.RestorationTokenBuilder();
         var restorationToken = restorationTokenBuilder
-                .user(user).activated(false)
+                .user(user)
+                .activated(false)
                 .purpose(RestorationTokenType.PASSWORD_RESET)
                 .expiration(LocalDateTime.now().plusMinutes(restorationTokenMinutes))
                 .created(LocalDateTime.now())
