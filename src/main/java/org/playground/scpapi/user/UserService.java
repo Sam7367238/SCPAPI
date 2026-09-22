@@ -5,7 +5,7 @@ import org.playground.scpapi.common.EmailService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -28,8 +28,6 @@ public class UserService {
         }
 
         var user = userMapper.toEntity(request);
-
-//        user.setCreated(LocalDateTime.now());
 
         Profile profile = new Profile();
         user.setProfile(profile);
@@ -68,8 +66,9 @@ public class UserService {
 
         restorationTokenRepository.save(restorationToken);
 
-        var uri = UriComponentsBuilder.newInstance()
-                .path("/password-resets/{token}")
+        var uri = ServletUriComponentsBuilder
+                .fromCurrentRequestUri()
+                .path("/{token}")
                 .buildAndExpand(restorationToken.getUuid())
                 .toUriString();
 
