@@ -34,4 +34,12 @@ public class RestorationToken {
 
     @Column(name = "created")
     private LocalDateTime created;
+
+    public UUID getUserUuid() {
+        return user.getUuid();
+    }
+
+    public boolean isExpired() {
+        return LocalDateTime.now().isAfter(expiration);
+    }
 }

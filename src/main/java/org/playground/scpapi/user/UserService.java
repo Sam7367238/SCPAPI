@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -67,8 +68,33 @@ public class UserService {
 
         restorationTokenRepository.save(restorationToken);
 
-        var uri = UriComponentsBuilder.newInstance().path("/users/password-reset-email").queryParam("token", restorationToken.getUuid()).toUriString();
+        var uri = UriComponentsBuilder.newInstance()
+                .path("/users/password-reset-email")
+                .queryParam("token", restorationToken.getUuid())
+                .toUriString();
 
         emailService.sendEmail(email, "Password Reset", uri);
+    }
+
+    public void resetPasswordWithToken(UUID tokenId, String newPassword) {
+        var token = restorationTokenRepository.findById(tokenId).orElseThrow(() -> new AccessDeniedException("The token is invalid"));
+
+        if (token.isActivated()) {
+            throw new AccessDeniedException("This token has already been used");
+        }
+
+        if (token.isExpired()) {
+            throw new ExpiredTokenException();
+        }
+
+        token.setActivated(true);
+
+        restorationTokenRepository.save(token);
+
+        var user = userRepository.findById(token.getUserUuid()).orElseThrow(UserNotFoundException::new);
+
+        user.setPassword(newPassword);
+
+        userRepository.save(user);
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/users")
@@ -29,13 +30,6 @@ class UserController {
         return ResponseEntity.created(uri).body(dto);
     }
 
-//    @PostMapping("/setup")
-//    public ResponseEntity<Void> setupUser(@Valid @RequestBody UserSetupRequest request) {
-//        userService.enableUserPassword(request.email(), request.password());
-//
-//        return ResponseEntity.ok().build();
-//    }
-
     @PostMapping("/password-reset")
     public ResponseEntity<Map<String, String>> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
         userService.sendPasswordResetEmail(request.email());
@@ -43,9 +37,28 @@ class UserController {
         return ResponseEntity.ok(Map.of("message", "A verification email has been sent"));
     }
 
+    @PostMapping("/password-reset-email")
+    public void resetPasswordEmail(@RequestParam(name = "token") UUID tokenId, @Valid @RequestBody NewPasswordRequest request) {
+        if (!request.newPassword().equals(request.repeatPassword())) {
+            throw new NonMatchingPasswordsException();
+        }
+
+        userService.resetPasswordWithToken(tokenId, request.newPassword());
+    }
+
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ErrorDto> handleAccessDeniedException(AccessDeniedException exception) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorDto(exception.getMessage()));
+    }
+
+    @ExceptionHandler(ExpiredTokenException.class)
+    public ResponseEntity<ErrorDto> handleExpiredTokenException(ExpiredTokenException exception) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorDto(exception.getMessage()));
+    }
+
+    @ExceptionHandler(NonMatchingPasswordsException.class)
+    public ResponseEntity<ErrorDto> handleNonMatchingPasswordsException(NonMatchingPasswordsException exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto(exception.getMessage()));
     }
 
     @ExceptionHandler(UserNotFoundException.class)
