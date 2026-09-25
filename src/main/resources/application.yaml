@@ -24,3 +24,22 @@ spring:
             enable: true
   restoration-tokens:
     minutes: 15
+  media:
+    allowedTypes:
+      - image/png
+      - image/jpg
+      - image/jpeg
+  servlet:
+    multipart:
+      max-file-size: 15MB
+      max-request-size: 15MB
+
+  cloud:
+    aws:
+      credentials:
+        accessKey: ${AWS_ACCESS_KEY}
+        secretKey: ${AWS_SECRET_KEY}
+        region:
+          static: ${AWS_REGION}
+    s3:
+      bucket: ${AWS_BUCKET}

@@ -1,5 +1,7 @@
 package org.playground.scpapi.common;
 
+import org.playground.scpapi.media.EmptyFileException;
+import org.playground.scpapi.media.InvalidMimeTypeException;
 import org.playground.scpapi.user.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
@@ -35,21 +37,15 @@ public class GlobalExceptionHandler {
         return new ErrorDto(exception.getMessage());
     }
 
-    @ExceptionHandler(AccessDeniedException.class)
+    @ExceptionHandler({ExpiredTokenException.class, AccessDeniedException.class})
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ErrorDto handleAccessDeniedException(AccessDeniedException exception) {
+    public ErrorDto handleExpiredTokenException(RuntimeException exception) {
         return new ErrorDto(exception.getMessage());
     }
 
-    @ExceptionHandler(ExpiredTokenException.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ErrorDto handleExpiredTokenException(ExpiredTokenException exception) {
-        return new ErrorDto(exception.getMessage());
-    }
-
-    @ExceptionHandler(NonMatchingPasswordsException.class)
+    @ExceptionHandler({NonMatchingPasswordsException.class, InvalidMimeTypeException.class, EmptyFileException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorDto handleNonMatchingPasswordsException(NonMatchingPasswordsException exception) {
+    public ErrorDto handleNonMatchingPasswordsException(RuntimeException exception) {
         return new ErrorDto(exception.getMessage());
     }
 }
